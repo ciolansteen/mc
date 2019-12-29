@@ -411,7 +411,6 @@ group_draw (WGroup * g)
             send_message (wg, NULL, MSG_RESIZE, 0, NULL);
         }
 
-
         for (p = g->widgets; p != NULL; p = g_list_next (p))
             widget_draw (WIDGET (p->data));
 
