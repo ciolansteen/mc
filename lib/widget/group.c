@@ -54,6 +54,12 @@ typedef struct
     int scale_y;
 } widget_shift_scale_t;
 
+typedef struct
+{
+    widget_state_t state;
+    gboolean enable;
+} widget_state_info_t;
+
 /*** file scope variables ************************************************************************/
 
 /* --------------------------------------------------------------------------------------------- */
@@ -124,12 +130,11 @@ group_select_next_or_prev (WGroup * g, gboolean next)
 /* --------------------------------------------------------------------------------------------- */
 
 static void
-group_set_state_foreach (WGroup * g, widget_state_t state, gboolean enable)
+group_widget_set_state (gpointer data, gpointer user_data)
 {
-    GList *iter;
+    widget_state_info_t *state = (widget_state_info_t *) user_data;
 
-    for (iter = g->widgets; iter != NULL; iter = g_list_next (iter))
-        widget_set_state (WIDGET (iter->data), state, enable);
+    widget_set_state (WIDGET (data), state->state, state->enable);
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -597,12 +602,16 @@ group_default_set_state (Widget * w, widget_state_t state, gboolean enable)
 {
     gboolean ret = MSG_HANDLED;
     WGroup *g = GROUP (w);
+    widget_state_info_t st = {
+        .state = state,
+        .enable = enable
+    };
 
     ret = widget_default_set_state (w, state, enable);
 
     if (state == WST_ACTIVE || state == WST_SUSPENDED || state == WST_CLOSED)
         /* inform all child widgets */
-        group_set_state_foreach (g, state, enable);
+        g_list_foreach (g->widgets, group_widget_set_state, &st);
 
     if ((w->state & WST_ACTIVE) != 0)
     {
@@ -614,7 +623,7 @@ group_default_set_state (Widget * w, widget_state_t state, gboolean enable)
         }
         else
             /* inform all child widgets */
-            group_set_state_foreach (g, state, enable);
+            g_list_foreach (g->widgets, group_widget_set_state, &st);
     }
 
     return ret;
