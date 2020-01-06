@@ -84,7 +84,7 @@ START_TEST (test_widget_find_by_id)
     fail_unless (widget_find_by_id (w0, 8) == NULL, "Found ID=8");
 
     send_message (g, NULL, MSG_INIT, 0, NULL);
-    send_message (g, NULL, MSG_DESTROY, 0, NULL);
+    widget_destroy (w0);
     g_free (g);
 }
 /* *INDENT-OFF* */
