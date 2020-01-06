@@ -121,7 +121,7 @@ START_TEST (test_group_init_deinit)
 
     fail_unless (ref == 8, "ref (%d) != 8", ref);
 
-    send_message (g, NULL, MSG_DESTROY, 0, NULL);
+    widget_destroy (WIDGET (g));
     g_free (g);
 
     fail_unless (ref == 0, "ref (%d) != 0", ref);

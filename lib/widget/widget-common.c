@@ -571,7 +571,7 @@ widget_replace (Widget * old_w, Widget * new_w)
     new_w->id = old_w->id;
     holder->data = new_w;
 
-    send_message (old_w, NULL, MSG_DESTROY, 0, NULL);
+    widget_destroy (old_w);
     send_message (new_w, NULL, MSG_INIT, 0, NULL);
 
     if (should_focus)

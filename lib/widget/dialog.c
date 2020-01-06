@@ -577,7 +577,7 @@ dlg_destroy (WDialog * h)
 {
     /* if some widgets have history, save all history at one moment here */
     dlg_save_history (h);
-    send_message (h, NULL, MSG_DESTROY, 0, NULL);
+    widget_destroy (WIDGET (h));
     mc_event_group_del (h->event_group);
     g_free (h->event_group);
     g_free (h);
